@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import List, Optional
 from uuid import uuid4
 
-from agents import build_agent_states, create_final_output, run_dummy_agents
+from agents import build_agent_states, create_final_output, run_agents
 from database import get_db_session
 from models import (
     Agent,
@@ -72,7 +72,7 @@ def get_task_by_id(task_id: str) -> Optional[TaskResponse]:
 
 def create_task(payload: TaskCreate) -> TaskResponse:
     created_at = datetime.utcnow()
-    logs = run_dummy_agents(payload)
+    logs = run_agents(payload)
     agents = build_agent_states()
     final_output = create_final_output(payload, logs)
     task_id = str(uuid4())
