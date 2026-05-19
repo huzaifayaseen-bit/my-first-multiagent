@@ -15,18 +15,34 @@ _SessionLocal = None
 
 
 def get_database_url() -> str:
-    database_url = os.getenv("DATABASE_URL")
+    database_url = (
+        os.getenv("DATABASE_URL")
+        or os.getenv("DATABASE_POSTGRES_URL")
+        or os.getenv("DATABASE_URL_UNPOOLED")
+        or os.getenv("DATABASE_POSTGRES_URL_NON_POOLING")
+        or os.getenv("DATABASE_POSTGRES_PRISMA_URL")
+    )
 
     if not database_url:
-        database_url = "postgresql+psycopg://postgres:postgres@localhost:5432/agentic_assistant"
+        raise RuntimeError(
+            "DATABASE_URL is missing. Add DATABASE_URL in Vercel backend Environment Variables."
+        )
 
     # Neon/Vercel sometimes gives postgres://
     if database_url.startswith("postgres://"):
-        database_url = database_url.replace("postgres://", "postgresql+psycopg://", 1)
+        database_url = database_url.replace(
+            "postgres://",
+            "postgresql+psycopg://",
+            1,
+        )
 
     # Neon/Vercel sometimes gives postgresql://
     if database_url.startswith("postgresql://"):
-        database_url = database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+        database_url = database_url.replace(
+            "postgresql://",
+            "postgresql+psycopg://",
+            1,
+        )
 
     return database_url
 
