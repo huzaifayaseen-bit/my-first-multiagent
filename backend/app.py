@@ -22,10 +22,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 @app.on_event("startup")
 def startup():
-    init_db()
+    try:
+        init_db()
+        print("Database initialized successfully")
+    except Exception as e:
+        print("Database initialization failed:", str(e))
 
 
 @app.get("/")
