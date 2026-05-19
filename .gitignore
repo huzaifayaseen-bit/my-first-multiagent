@@ -6,3 +6,6 @@ out
 !backend/.env.example
 .DS_Store
 *.log
+backend/.env
+.env
+.env.local
